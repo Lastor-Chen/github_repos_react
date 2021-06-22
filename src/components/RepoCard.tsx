@@ -1,10 +1,10 @@
 import { Component } from 'react'
 import dayjs from '../apis/dayjs'
-import { repo } from '../views/Home'
+import { Repo } from './Repos'
 import './RepoCard.css'
 
 export interface RepoCardProps {
-  repo: repo
+  repo: Repo
 }
 
 class RepoCard extends Component<RepoCardProps> {
@@ -12,7 +12,7 @@ class RepoCard extends Component<RepoCardProps> {
     return dayjs(ISOString).fromNow()
   }
 
-  ifHomepage(repo: repo) {
+  ifHomepage(repo: Repo) {
     if (!repo.homepage) return null
 
     return (
@@ -24,7 +24,7 @@ class RepoCard extends Component<RepoCardProps> {
     )
   }
 
-  ifDescription(repo: repo) {
+  ifDescription(repo: Repo) {
     if (repo.description) {
       return <p className="card-text">{repo.description}</p>
     } else {

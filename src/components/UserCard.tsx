@@ -23,9 +23,9 @@ class UserCard extends Component<Props> {
       const { data } = await githubAPI.getUser()
       this.setState({
         user: {
-          avatar_url: data.avatar_url,
-          name: data.name,
-          accountName: data.login,
+          avatar_url: data.avatar_url as string,
+          name: data.name as string,
+          accountName: data.login as string,
         }
       })
 
