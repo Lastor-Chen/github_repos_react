@@ -2,12 +2,11 @@
   .bg-img {
     height: 80%;
     width: 300px;
-    /* background-image: url('/img/gundamcat.png'); */
     background-repeat: no-repeat;
     background-size: contain;
     opacity: 0;
-    position: absolute;
-    top: 50vh;
+    position: relative;
+    top: 30vh;
   }
 }
 

@@ -77,10 +77,7 @@ class Repos extends Component<ReposProps> {
   }
 
   ifSpinner() {
-    if (this.state.isLoading)
-      return <Spinner />
-    else
-      return null
+    return this.state.isLoading ? <Spinner /> : null
   }
 
   componentDidMount() {
