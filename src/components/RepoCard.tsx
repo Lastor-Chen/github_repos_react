@@ -1,10 +1,7 @@
 import { Component } from 'react'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
+import dayjs from '../apis/dayjs'
 import { repo } from '../views/Home'
 import './RepoCard.css'
-
-dayjs.extend(relativeTime)
 
 export interface RepoCardProps {
   repo: repo
@@ -31,7 +28,7 @@ class RepoCard extends Component<RepoCardProps> {
     if (repo.description) {
       return <p className="card-text">{repo.description}</p>
     } else {
-      return <p className="card-text text-muted" v-else>No description...</p>
+      return <p className="card-text text-muted">No description...</p>
     }
   }
 

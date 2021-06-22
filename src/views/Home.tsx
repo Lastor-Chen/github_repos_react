@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import React, { Component } from 'react'
 
 import Swal from 'sweetalert2'
 import githubAPI from '../apis/githubAPI'
@@ -20,16 +20,14 @@ export interface repo {
 class Home extends Component {
   state = {
     repos: [] as repo[],
-    page: 1,
+    isLoading: false,
     totalPage: 0,
-    observe: null, // 監看滾動分頁
-    isLoading: false
+    page: 1,
   }
-  pageLimit = githubAPI.pageLimit
 
-  updateTotalPage = (reposSize: number) => {
-    this.setState({ totalPage: Math.ceil(reposSize / this.pageLimit) })
-  }
+  observe: IntersectionObserver = null as any // 監看滾動分頁
+  obRef = React.createRef() as React.RefObject<HTMLDivElement>
+  pageLimit = githubAPI.pageLimit
 
   fetchRepos = async (page: number) => {
     try {
@@ -45,8 +43,9 @@ class Home extends Component {
         homepage: repo.homepage,
         updated_at: repo.updated_at
       })) as repo[]
+      const newRepos = this.state.repos.concat(repos)
 
-      this.setState({ repos })
+      this.setState({ repos: newRepos })
       this.setState({ isLoading: false })
     } catch (err) {
       this.setState({ isLoading: false })
@@ -54,8 +53,39 @@ class Home extends Component {
     }
   }
 
+  updateTotalPage = (reposSize: number) => {
+    this.setState({ totalPage: Math.ceil(reposSize / this.pageLimit) })
+  }
+
+  loadMoreRepos = async (entries: IntersectionObserverEntry[]) => {
+    const state = this.state
+    if (state.isLoading) return void 0
+
+    // ob 初始化時，不加載
+    const { isIntersecting } = entries[0]
+    const windowHeight = window.innerHeight
+    const obPosition = (this.obRef.current as HTMLDivElement).offsetTop
+    const isOverWindow = obPosition > windowHeight
+    if (!isIntersecting || !isOverWindow) return void 0
+
+    // 滿足條件時 loadMore
+    const page = state.page + 1
+    this.setState({ page })
+    await this.fetchRepos(page)
+
+    // 如分頁資料已全數加載，移除 observe
+    if (page === state.totalPage) {
+      this.observe.disconnect()
+      this.observe = null as any
+    }
+  }
+
   componentDidMount() {
     this.fetchRepos(this.state.page)
+
+    // 滾動分頁
+    this.observe = new IntersectionObserver(this.loadMoreRepos)
+    this.observe.observe(this.obRef.current as HTMLDivElement)
   }
 
   render() {
@@ -76,19 +106,20 @@ class Home extends Component {
             <div className="bg-img mt-5"></div>
           </div>
           <div className="col-md-9">
-            <div className="mt-3 mt-md-0 text-center text-md-left">
-              <span className="font-weight-bold">Repositories</span>
-              <span className="badge badge-pill badge-secondary">{ repos.length }</span>
+            <div className="mt-3 mt-md-0 text-center text-md-start">
+              <span className="fw-bold me-1">Repositories</span>
+              <span className="badge rounded-pill bg-secondary">{ repos.length }</span>
             </div>
             <hr />
             <div className="position-relative">
               {
-                repos.map(repo => 
+                repos.map(repo =>
                   <RepoCard key={repo.id} repo={repo}></RepoCard>
                 )
               }
               { this.state.isLoading ? spinner : '' }
             </div>
+            <div ref={this.obRef}></div>
           </div>
         </div>
       </div>
