@@ -1,0 +1,29 @@
+.repo-info {
+  font-size: .85rem;
+  color: #586069;
+}
+
+.lang-dot::before {
+  display: inline-block;
+  content: '';
+  border-radius: 50%;
+  margin-right: 0.2rem;
+  width: .75rem;
+  height: .75rem;
+}
+
+.lang-dot[data-color="Vue"]::before {
+  background-color: #41b883;
+}
+
+.lang-dot[data-color="JavaScript"]::before {
+  background-color: #f1e05a;
+}
+
+.lang-dot[data-color="HTML"]::before {
+  background-color: #e34c26;
+}
+
+.lang-dot[data-color="TypeScript"]::before {
+  background-color: #2b7489;
+}

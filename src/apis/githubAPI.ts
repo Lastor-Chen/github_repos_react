@@ -8,7 +8,7 @@ const USER = 'lastor-chen'  // github username
 const LIMIT = 7             // page limit
 const SORT_BY = 'pushed'
 
-export default {
+const githubAPI = {
   pageLimit: LIMIT,
   getRepos(page: number) {
     return apiHelper.get(`/users/${USER}/repos?sort=${SORT_BY}&page=${page}&per_page=${LIMIT}`)
@@ -17,3 +17,5 @@ export default {
     return apiHelper.get(`https://api.github.com/users/${USER}`)
   }
 }
+
+export default githubAPI

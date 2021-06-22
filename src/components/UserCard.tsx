@@ -18,16 +18,7 @@ class UserCard extends Component<Props> {
     }
   }
 
-  constructor(props: Props) {
-    super(props)
-    this.fetchUser = this.fetchUser.bind(this)
-  }
-
-  componentDidMount() {
-    this.fetchUser()
-  }
-
-  async fetchUser() {
+  fetchUser = async () => {
     try {
       const { data } = await githubAPI.getUser()
       this.setState({
@@ -42,6 +33,10 @@ class UserCard extends Component<Props> {
     } catch (err) {
       Swal.fire('503', '無法取得 User，請稍後再試', 'error')
     }
+  }
+
+  componentDidMount() {
+    this.fetchUser()
   }
 
   render() {
